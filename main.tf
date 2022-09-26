@@ -83,7 +83,7 @@ resource "aws_ecs_task_definition" "tfc_agent" {
 }
 
 resource "aws_ecs_service" "tfc_agent" {
-  name            = "${var.name}-tfc-agents"
+  name            = "tfc-agents-${var.name}"
   cluster         = var.ecs_cluster_arn
   task_definition = aws_ecs_task_definition.tfc_agent.arn
   desired_count   = var.num_agents
