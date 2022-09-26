@@ -82,7 +82,7 @@ resource "aws_ecs_task_definition" "tfc_agent" {
   )
 }
 
-resource "aws_ecs_service" "tfc-agent" {
+resource "aws_ecs_service" "tfc_agent" {
   name            = "${var.prefix}-tfc-agents"
   cluster         = var.ecs_cluster_arn
   task_definition = aws_ecs_task_definition.tfc_agent.arn
@@ -107,6 +107,11 @@ resource "aws_ecs_service" "tfc-agent" {
   lifecycle {
     ignore_changes = [desired_count]
   }
+}
+
+moved {
+  from = aws_ecs_service.tfc-agent
+  to   = aws_ecs_service.tfc_agent
 }
 
 resource "aws_security_group" "tfc_agent" {
