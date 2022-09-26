@@ -27,7 +27,7 @@ resource "tfe_agent_token" "ecs_agent_token" {
 }
 
 resource "aws_ecs_task_definition" "tfc_agent" {
-  family                   = "${var.tfc_org_name}-tfc-agent-${var.name}"
+  family                   = "tfc-agent-${var.tfc_org_name}-${var.name}"
   cpu                      = var.agent_cpu
   memory                   = var.agent_memory
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "tfc_agent" {
             awslogs-create-group : "true",
             awslogs-group : var.cloudwatch_log_group_name
             awslogs-region : data.aws_region.current.name
-            awslogs-stream-prefix : "tfc-agent-${var.name}"
+            awslogs-stream-prefix : "tfc-agent-${var.tfc_org_name}-${var.name}"
           }
         }
         environment = concat([
@@ -83,7 +83,7 @@ resource "aws_ecs_task_definition" "tfc_agent" {
 }
 
 resource "aws_ecs_service" "tfc_agent" {
-  name            = "tfc-agent-${var.name}"
+  name            = "tfc-agent-${var.tfc_org_name}-${var.name}"
   cluster         = var.ecs_cluster_arn
   task_definition = aws_ecs_task_definition.tfc_agent.arn
   desired_count   = var.num_agents
@@ -115,8 +115,8 @@ moved {
 }
 
 resource "aws_security_group" "tfc_agent" {
-  name_prefix = "tfc-agent-${var.name}-sg"
-  description = "Security group for tfc-agent: ${var.name}"
+  name_prefix = "tfc-agent-${var.tfc_org_name}-${var.name}-sg"
+  description = "Security group for tfc-agent: ${var.name} in org ${var.tfc_org_name}"
   vpc_id      = var.vpc_id
   lifecycle {
     create_before_destroy = true
@@ -144,7 +144,7 @@ data "aws_iam_policy_document" "agent_assume_role_policy" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "tfc-agent-${var.name}-ecsTaskExecutionRole"
+  name               = "tfc-agent-${var.tfc_org_name}-${var.name}-ecsTaskExecutionRole"
   assume_role_policy = data.aws_iam_policy_document.agent_assume_role_policy.json
 }
 
@@ -154,7 +154,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attach
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name               = "tfc-agent-${var.name}-ecsTaskRole"
+  name               = "tfc-agent-${var.tfc_org_name}-${var.name}-ecsTaskRole"
   assume_role_policy = data.aws_iam_policy_document.agent_assume_role_policy.json
 }
 

@@ -1,6 +1,6 @@
 variable "name" {
   type        = string
-  description = "A unique name to apply to resources."
+  description = "A name to apply to resources. The combination of `name` and `tfc_org_name` must be unique within an AWS account."
 }
 
 variable "tfc_address" {
@@ -11,7 +11,7 @@ variable "tfc_address" {
 
 variable "tfc_org_name" {
   type        = string
-  description = "The name of the TFC/TFE organization where the agent pool will be configured."
+  description = "The name of the TFC/TFE organization where the agent pool will be configured. The combination of `tfc_org_name` and `name` must be unique within an AWS account."
 }
 
 variable "agent_cpu" {
