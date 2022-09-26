@@ -1,6 +1,6 @@
-variable "prefix" {
+variable "name" {
   type        = string
-  description = "This prefix will be included in the name of most resources."
+  description = "A unique name to apply to resources."
 }
 
 variable "tfc_address" {
