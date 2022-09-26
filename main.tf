@@ -27,7 +27,7 @@ resource "tfe_agent_token" "ecs_agent_token" {
 }
 
 resource "aws_ecs_task_definition" "tfc_agent" {
-  family                   = "${var.prefix}-${var.tfc_org_name}-tfc-agent"
+  family                   = "${var.tfc_org_name}-tfc-agent-${var.prefix}"
   cpu                      = var.agent_cpu
   memory                   = var.agent_memory
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
