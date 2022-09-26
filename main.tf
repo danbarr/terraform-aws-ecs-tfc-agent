@@ -116,7 +116,7 @@ moved {
 
 resource "aws_security_group" "tfc_agent" {
   name_prefix = "tfc-agent-${var.name}-sg"
-  description = "Security group for tfc-agent \"${var.name}\""
+  description = "Security group for tfc-agent: ${var.name}"
   vpc_id      = var.vpc_id
   lifecycle {
     create_before_destroy = true
