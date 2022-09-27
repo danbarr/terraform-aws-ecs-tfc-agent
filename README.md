@@ -6,6 +6,7 @@ Prerequisites:
 
 - An existing VPC with at least one public subnet
 - An existing ECS Fargate cluster
+- A Terraform Cloud organization with self-hosted agent support (Business tier), or a Terraform Enterprise instance
 
 Minimal example using the standard agent image (hashicorp/tfc-agent):
 
