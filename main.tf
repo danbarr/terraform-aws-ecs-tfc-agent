@@ -26,6 +26,13 @@ resource "tfe_agent_token" "ecs_agent_token" {
   description   = "${var.name}-agent-token"
 }
 
+resource "aws_ssm_parameter" "agent_token" {
+  name        = "${var.name}-tfc-agent-token"
+  description = "Terraform Cloud agent token"
+  type        = "SecureString"
+  value       = tfe_agent_token.ecs_agent_token.token
+}
+
 resource "aws_ecs_task_definition" "tfc_agent" {
   family                   = "tfc-agent-${var.tfc_org_name}-${var.name}"
   cpu                      = var.agent_cpu
@@ -69,14 +76,16 @@ resource "aws_ecs_task_definition" "tfc_agent" {
             value = var.tfc_address
           },
           {
-            name  = "TFC_AGENT_TOKEN",
-            value = tfe_agent_token.ecs_agent_token.token
-          },
-          {
             name  = "TFC_AGENT_LOG_LEVEL",
             value = var.agent_log_level
           }
-        ], var.extra_env_vars)
+        ], var.extra_env_vars),
+        secrets = [
+          {
+            name      = "TFC_AGENT_TOKEN",
+            valueFrom = aws_ssm_parameter.agent_token.arn
+          }
+        ]
       }
     ]
   )
@@ -132,6 +141,10 @@ resource "aws_security_group_rule" "allow_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+## IAM
+# Two roles are defined: the task execution role used during initialization,
+# and the task role which is assumed by the container(s).
+
 data "aws_iam_policy_document" "agent_assume_role_policy" {
   statement {
     effect  = "Allow"
@@ -151,6 +164,20 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attachment" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+data "aws_iam_policy_document" "agent_init_policy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["ssm:GetParameters"]
+    resources = [aws_ssm_parameter.agent_token.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "agent_init_policy" {
+  role   = aws_iam_role.ecs_task_execution_role.name
+  name   = "AccessSSMforAgentToken"
+  policy = data.aws_iam_policy_document.agent_init_policy.json
 }
 
 resource "aws_iam_role" "ecs_task_role" {
