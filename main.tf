@@ -27,7 +27,7 @@ resource "tfe_agent_token" "ecs_agent_token" {
 }
 
 resource "aws_ssm_parameter" "agent_token" {
-  name        = "${var.name}-tfc-agent-token"
+  name        = "/tfc-agent-token/${var.tfc_org_name}/${var.name}"
   description = "Terraform Cloud agent token"
   type        = "SecureString"
   value       = tfe_agent_token.ecs_agent_token.token
