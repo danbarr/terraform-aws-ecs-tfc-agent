@@ -21,7 +21,7 @@ provider "aws" {
 provider "tfe" {}
 
 module "agent_pool" {
-  source                    = "../"
+  source                    = "github.com/danbarr/terraform-aws-ecs-tfc-agent?ref=v0.3.0"
   name                      = "ecs"
   tfc_org_name              = "My-TFC-Org"
   agent_image               = "hashicorp/tfc-agent:latest"

@@ -1,6 +1,6 @@
 # Terraform module aws-ecs-tfc-agent
 
-This module deploys a Terraform Cloud Agent task definition and service into an existing ECS Fargate cluster. It includes the required security group and IAM roles for a basic deployment. For all options, see variables.tf
+This module creates a Terraform Cloud Agent pool in a TFC org, and deploys a task definition and service into an existing ECS Fargate cluster. It includes the required security group and IAM roles for a basic deployment. For all options, see variables.tf
 
 Prerequisites:
 
@@ -8,11 +8,13 @@ Prerequisites:
 - An existing ECS Fargate cluster
 - A Terraform Cloud organization with self-hosted agent support (Business tier), or a Terraform Enterprise instance
 
+Hat tip to Andy Assareh for his [excellent examples](https://github.com/assareh/tfc-agent).
+
 Minimal example using the standard agent image (hashicorp/tfc-agent):
 
 ```terraform
 module "agent_standard" {
-  source  = "github.com/danbarr/terraform-aws-ecs-tfc-agent?ref=v0.2.4"
+  source  = "github.com/danbarr/terraform-aws-ecs-tfc-agent?ref=v0.3.0"
 
   name                      = "ecs"
   tfc_org_name              = "My-TFC-Org"
@@ -32,7 +34,7 @@ module "agent_cluster" {
 }
 
 module "agent_standard" {
-  source  = "github.com/danbarr/terraform-aws-ecs-tfc-agent?ref=v0.2.4"
+  source  = "github.com/danbarr/terraform-aws-ecs-tfc-agent?ref=v0.3.0"
 
   name                      = "ecs-custom"
   tfc_org_name              = "My-TFC-Org"
