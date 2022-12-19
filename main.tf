@@ -65,7 +65,7 @@ resource "aws_ecs_task_definition" "tfc_agent" {
         environment = concat([
           {
             name  = "TFC_AGENT_SINGLE",
-            value = "true"
+            value = tostring(var.agent_single_execution)
           },
           {
             name  = "TFC_AGENT_NAME",

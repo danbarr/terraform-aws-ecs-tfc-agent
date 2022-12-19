@@ -38,6 +38,12 @@ variable "agent_image" {
   default     = "hashicorp/tfc-agent:latest"
 }
 
+variable "agent_single_execution" {
+  type        = bool
+  description = "Whether to use single-execution mode."
+  default     = true
+}
+
 variable "extra_env_vars" {
   type = list(object({
     name  = string
