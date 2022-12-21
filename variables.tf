@@ -44,6 +44,16 @@ variable "agent_single_execution" {
   default     = true
 }
 
+variable "agent_auto_update" {
+  type        = string
+  description = "Whether the agent should auto-update. Valid values are minor, patch, and disabled."
+  default     = "minor"
+  validation {
+    condition     = contains(["minor", "patch", "disabled"], var.agent_auto_update)
+    error_message = "Valid values: minor, patch, disabled"
+  }
+}
+
 variable "extra_env_vars" {
   type = list(object({
     name  = string
