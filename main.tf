@@ -78,6 +78,10 @@ resource "aws_ecs_task_definition" "tfc_agent" {
           {
             name  = "TFC_AGENT_LOG_LEVEL",
             value = var.agent_log_level
+          },
+          {
+            name  = "TFC_AGENT_AUTO_UPDATE",
+            value = var.agent_auto_update
           }
         ], var.extra_env_vars),
         secrets = [
