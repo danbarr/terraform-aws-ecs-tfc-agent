@@ -87,7 +87,7 @@ variable "num_agents" {
 
 variable "cloudwatch_log_group_name" {
   type        = string
-  description = "The name of the CloudWatch log group where agent logs will be sent."
+  description = "The name of the CloudWatch log group where agent logs will be sent. The log group must already exist."
 }
 
 variable "ecs_cluster_arn" {
