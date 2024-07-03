@@ -4,12 +4,12 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.24"
+      version = ">= 4.24"
     }
 
     tfe = {
       source  = "hashicorp/tfe"
-      version = "~> 0.36"
+      version = ">= 0.36"
     }
   }
 }
@@ -28,7 +28,7 @@ resource "tfe_agent_token" "ecs_agent_token" {
 
 resource "aws_ssm_parameter" "agent_token" {
   name        = "/tfc-agent-token/${var.tfc_org_name}/${var.name}"
-  description = "Terraform Cloud agent token"
+  description = "HCP Terraform agent token"
   type        = "SecureString"
   value       = tfe_agent_token.ecs_agent_token.token
 }
